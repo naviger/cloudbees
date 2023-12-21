@@ -1,0 +1,58 @@
+version: "3.7"
+
+services:
+  postgres:
+    image: postgres:15.4-alpine3.18
+    container_name: cb_postgres
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - deploy-postgres:/var/lib/postgresql/data
+      - ./infra/postgres:/docker-entrypoint-initdb.d
+    networks:
+      - cloudbees-network
+    expose:
+      - 5432
+
+  keycloak:
+    image: keycloak/keycloak:22.0.1
+    container_name: cb_keycloak
+    command: start-dev 
+      --spi-theme-static-max-age=-1 
+      --spi-theme-cache-themes=false 
+      --spi-theme-cache-templates=false 
+      --https-port=8443 
+    ports:
+      - 8080:8080
+      - 8443:8443
+    environment:
+      - KEYCLOAK_ADMIN=kcadmin
+      - KEYCLOAK_ADMIN_PASSWORD=adminP@55
+      - KC_DB=postgres
+      - KC_DB_URL_HOST=postgres
+      - KC_DB_URL_DATABASE=keycloak
+      - KC_DB_SCHEMA=keycloak
+      - KC_DB_USERNAME=keycloak
+      - KC_DB_PASSWORD=adminP@55
+      - KC_HTTPS_CERTIFICATE_FILE=/etc/x509/https/localhost.crt 
+      - KC_HTTPS_CERTIFICATE_KEY_FILE=/etc/x509/https/localhost.key 
+    # entrypoint: /opt/keycloak/bin/kc.sh start-dev
+    depends_on:
+      - postgres
+    volumes:
+      - ./keycloak_themes/isperience:/opt/keycloak/themes/isperience
+      - ./certs:/etc/x509/https
+    networks:
+      - cloudbees-network
+
+volumes:
+  data:
+  deploy-postgres:
+
+networks:
+  cloudbees-network:
+    driver: bridge
+    name: cloudbees-network
