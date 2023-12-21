@@ -2,7 +2,7 @@
 Cloudbees test implementation
 Staff Software Engineer  - Team Lead
  
-##Requirements:
+## Requirements:
 1. Code must be published in Github with a link we can access (use public repo).
 2. Code must compile with some effort on unit tests, doesn’t have to be 100%, but it shouldn’t be 0%.
 3. Please code this with Golang and gRPC
@@ -10,7 +10,7 @@ Staff Software Engineer  - Team Lead
 5. The results can be in the console output from your grpc-server and grpc-client
 6. Depending on the level of authentication, take different actions
 
-##App to be coded
+## App to be coded
 __Note:__ All APIs referenced are gRPC APIs, not REST ones.
 I want to board a train from London to France. The train ticket will cost $20, regardless of section or seat.
 1. Authenticated APIs should be able to parse a JWT, formatted as if from an OAuth2 server, from the metadata to authenticate a request. No signature validation is required.
@@ -43,7 +43,7 @@ subjectAltName = @alt_names
 DNS.1 = localhost
 DNS.2 = isperience.web 
 DNS.3 = isperience.web
-	```
+```
 
 2. openssl req -new -nodes -newkey rsa:2048 -keyout localhost.key -out localhost.csr -subj "/C=US/ST=FL/L=Miami/O=Example-Certificates/CN=localhost.local"
 3. openssl x509 -req -sha256 -days 1024 -in localhost.csr -CA RootCA.pem -CAkey RootCA.key -CAcreateserial -extfile domains.ext -out localhost.crt
