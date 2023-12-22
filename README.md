@@ -57,3 +57,52 @@ DNS.3 = isperience.web
 ## Configure Server
 1. Add localhost.crt
 2. Add localhost.key
+
+# Configure Key Cloak
+1. Create Application Client
+	- Tab 1: Client Type: OpenID Connect
+	- Tab 1: Client ID: cloudbees_client
+	- Tab 1: Name: CloudbeesClient
+	- Tab 2: Client authentication: On
+	- Tab 2: Authorization: On~~
+	- Tab 2: Authentication flow: Standard flow, Direct Access Grants
+	- Tab 3: Root URL: https://cloudbees.dev:3443
+	- Tab 3: Home URL: http://cloudbees.dev:3443
+	- Tab 3: Valid RedirectURLs:  http://cloudbees.dev:3443, http://cloudbees.dev:3444
+	- Tab 3: Web origins: http://cloudbees.dev:3443
+4. Add Client Roles
+	- travel_admin
+	- travel_user
+5. Add Groups
+	- admins => travel_admin
+	- customers => stravel_customer
+6. Add Users (admin)
+	- Add username (email Address)
+	- Add email address
+	- add first name and last name
+	- Assign Roles
+7. Create API Client
+	- Tab 1: Client type: OpenID Connect
+	- Tab 2: Client ID: cloudbees_service
+	- Tab 3: Name: cloudbees Service Account
+	- Tab 2: Client authentication: On
+	- Tab 2: Authorization: On
+	- Tab 3: Root URL: http://cloudbees.dev:3443
+	- Tab 3: Home URL: http://cloudbees.dev:3443
+	- Tab 3: Valid RedirectURLs:  http://cloudbees.dev:3443, http://cloudbees.dev:3444
+	- Tab 3: Web origins:  http://cloudbees.dev:3443
+7. Create Client Scope
+		○   Name: iSperience-common
+		○   Add a mapper with email, full name, client roles
+		○   create protocol mapper, type: Audience, name: isperience-common-audience, Include client audient: isperience_client, Add to access token: true
+	8. Add the newly created client scope " isperience-common-audience" to "isperience_service" client's client roles
+
+# Create React App (with Typescript_)
+
+Execute the following:
+
+```
+npx create-react-app cloudbees --template typescript
+```
+
+
