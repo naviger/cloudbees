@@ -1,0 +1,58 @@
+.train {
+  max-width:230px;
+  min-width:230px;
+  border-radius: 10px;
+  border: solid 1px green;
+  display:flex;
+  flex-direction: column;
+  padding: 20px;
+}
+
+.car {
+  display: flex;
+  flex-direction: row;
+  max-width:230px;
+  min-width:220px;
+  max-height:200px;
+  min-height:200px;
+  border: solid 1px darkgreen;
+  border-radius: 6px;
+  display:flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  padding-left:4px;
+  padding-top:4px;
+  margin-bottom: 20px;
+}
+
+.section {
+  max-width:220px;
+  min-width:220px;
+  max-height:40px;
+  min-height:40px;
+  display: flex;
+  flex-direction: row;
+}
+
+.seat {
+  background-color:silver;
+  border-radius: 4px;
+  max-width:40px;
+  min-width:40px;
+  max-height:40px;
+  min-height:40px;
+  border-radius: 6px;
+  margin:2px;
+}
+
+.seat.aisle {
+  margin-right:40px;
+}
+
+.lav {
+  max-width:90px;
+  min-width:90px;
+  max-height:40px;
+  min-height:40px;
+  border-radius: 6px;
+}

@@ -7,6 +7,15 @@ import LoadingPage from './pages/loading'
 import { useAuth } from "react-oidc-context"
 
 import './App.css';
+import Nav from './components/nav'
+
+const parseJwt = (token:string) => {
+  try {
+    return JSON.parse(atob(token.split('.')[1]));
+  } catch (e) {
+    return null;
+  }
+}
 
 function App() {
 
@@ -24,39 +33,54 @@ function App() {
   }
 
   if (auth.error) {
-      const props:ErrorPageProps = {
-          source:"auth",
-          message:auth.error.message
+    const props:ErrorPageProps = {
+        source:"auth",
+        message:auth.error.message
+    }
+    switch(auth.error.message) {
+        case "Token is not active":
+        case "No matching state found in storage":
+        case "Session not active":
+            window.location.href="https://cloudbees.dev:3443"
+            break;
+        default:
+            return <div><ErrorPage {...props} /></div>
+    }
+  }
+
+  let isAdmin = false
+  if(auth.isAuthenticated) {
+    const jwt = parseJwt(auth.user?.access_token as string)
+    console.log("SECURE DATA:", auth.user, jwt)
+    
+    if(jwt["resource_access"]) {
+      const ra = jwt["resource_access"]
+      if (ra["cloudbees-client"]) {
+        const roles = ra["cloudbees-client"]["roles"]
+        if(roles.indexOf("travel_admin") > -1){
+          isAdmin=true
+        }
+        console.log(roles)
       }
-      switch(auth.error.message) {
-          case "Token is not active":
-          case "No matching state found in storage":
-          case "Session not active":
-              window.location.href="http://isperience.web:3006"
-              break;
-          default:
-              return <div><ErrorPage {...props} /></div>
-      }
+    }
   }
 
   
-    if (auth.isAuthenticated) {
-      return (
-          <div className="main">
-            <AdminPage></AdminPage>
-          </div>
-      );
+  if (auth.isAuthenticated && isAdmin) {
+    return (
+        <div className="main">
+           <Nav></Nav>
+          <AdminPage></AdminPage>
+        </div>
+    )
   }
 
-  return <div className="splash">
-      <div> </div>
-      <div className="login">
-          <div className="logo">
-             <button className="login-button" onClick={() => void auth.signinRedirect()}>Log in</button>
-          </div>
-     
-      </div>
-  </div>
+  return (
+    <div className="main">
+      <Nav></Nav>
+      <DefaultPage></DefaultPage>
+    </div>
+  )
   
 }
 

@@ -27,7 +27,7 @@ b. The user is allocated a seat in the train as a result of the purchase. Assume
 
 # Certificate Setup
 ## Create CA
-	1. openssl req -x509 -nodes -new -sha256 -days 1024 -newkey rsa:2048 -keyout RootCA.key -out RootCA.pem -subj "/C=US/CN=isperience-CA"
+	1. openssl req -x509 -nodes -new -sha256 -days 1024 -newkey rsa:2048 -keyout RootCA.key -out RootCA.pem -subj "/C=US/CN=cloudbees-CA"
 	2. openssl x509 -outform pem -in RootCA.pem -out RootCA.crt
 
 ## Create Server Certificate
@@ -41,8 +41,8 @@ keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
 subjectAltName = @alt_names
 [alt_names]
 DNS.1 = localhost
-DNS.2 = isperience.web 
-DNS.3 = isperience.web
+DNS.2 = cloudbees.dev
+DNS.3 = cloudbees.dev
 ```
 
 2. openssl req -new -nodes -newkey rsa:2048 -keyout localhost.key -out localhost.csr -subj "/C=US/ST=FL/L=Miami/O=Example-Certificates/CN=localhost.local"
@@ -92,12 +92,12 @@ DNS.3 = isperience.web
 	- Tab 3: Valid RedirectURLs:  http://cloudbees.dev:3443, http://cloudbees.dev:3444
 	- Tab 3: Web origins:  http://cloudbees.dev:3443
 7. Create Client Scope
-		○   Name: iSperience-common
-		○   Add a mapper with email, full name, client roles
-		○   create protocol mapper, type: Audience, name: isperience-common-audience, Include client audient: isperience_client, Add to access token: true
-	8. Add the newly created client scope " isperience-common-audience" to "isperience_service" client's client roles
+	- Name: cloudbees-common
+	- Add a mapper with email, full name, client roles
+	- create protocol mapper, type: Audience, name: cloudbees-common-audience, Include client audience: cloudbees-client, Add to access token: true
+8. Add the newly created client scope " cloudbees-common-audience" to "cloudbees-service" client's client roles
 
-# Create React App (with Typescript_)
+# Create React App (with Typescript)
 
 Execute the following:
 

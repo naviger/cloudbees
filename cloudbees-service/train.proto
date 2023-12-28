@@ -1,0 +1,105 @@
+syntax = "proto3";
+option go_package = "/train";
+
+service TrainService {
+    rpc GetTrain(TrainRequest) returns (TrainReply) {}
+    rpc GetSeat(SeatRequest) returns (SeatReply) {}
+    rpc GetReceipt(ReceiptRequest) returns (ReceiptReply) {}
+    rpc ChangeSeat(ChangeSeatRequest) returns (ChangeSeatReply) {}
+    rpc CancelSeat(CancelSeatRequest) returns (CancelSeatReply) {}
+}
+
+message TrainRequest {
+  string trainId = 1;
+  int32 day = 2;
+  int32 month = 3;
+  int32 year = 4;
+}
+
+message TrainReply {
+  message Seat {
+    string id = 10;
+    string car = 11;
+    int32 row = 12;
+    string position = 13;
+    string status = 14;
+    string passengerId = 15;
+  }
+
+  string trainId = 5;
+  int32 day = 6;
+  int32 month = 7;
+  int32 year = 8;
+  repeated Seat Seats = 9;
+}
+
+message SeatRequest {
+  string id = 1001;
+  string userFirstName = 1002;
+  string userLastName = 1003;
+  string userEmail = 1004;
+  string trainId = 1005;
+  string seatValue = 1006;
+}
+
+message SeatReply {
+  message Seat {
+    string id = 110;
+    string car = 111;
+    int32 row = 112;
+    string position = 113;
+    string status = 114;
+    string passengerId = 115;
+  }
+
+  string id = 2001;
+  string status = 2002;
+  string customerId = 2003;
+  Seat seat = 2004;
+}
+
+message ReceiptRequest {
+  string id = 2201;
+  string customerId = 2202;
+  string trainId = 2203;
+}
+
+message ReceiptReply {
+  message Seat {
+    string id = 210;
+    string car = 211;
+    int32 row = 212;
+    string position = 213;
+    string status = 214;
+    string passengerId = 215;
+  }
+
+  string id = 2301;
+  string trainId = 2302;
+  repeated Seat seats = 2303;
+}
+
+message CancelSeatRequest {
+  string id = 3001;
+  string customerId = 3002;
+  string seatId = 3003;
+}
+
+message CancelSeatReply {
+  string id = 4001;
+  string status = 4002;
+}
+
+message ChangeSeatRequest {
+  string id = 5001;
+  string customerId = 5002;
+  string sourceSeat = 5003;
+  string destSeat = 5004;
+}
+
+message ChangeSeatReply {
+  string id = 6001;
+  string status = 6002;
+  TrainReply.Seat sourceSeat = 6003;
+  TrainReply.Seat destSeat = 6004;
+}
