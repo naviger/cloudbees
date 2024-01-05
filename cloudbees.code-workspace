@@ -1,0 +1,16 @@
+{
+  "folders": [
+    {
+      "path": "cloudbees-service"
+    },
+    {
+      "path": "cloudbees-api"
+    },
+    {
+      "path": "cloudbees"
+    },
+    {
+      "path": "deploy"
+    }
+  ]
+}

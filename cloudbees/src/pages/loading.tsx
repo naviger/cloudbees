@@ -1,5 +1,5 @@
 import React from 'react'
-import './common.css'
+import './default.css'
 
 const LoadingPage = () => {
   return (

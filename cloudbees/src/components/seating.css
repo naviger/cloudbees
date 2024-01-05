@@ -6,6 +6,14 @@
   display:flex;
   flex-direction: column;
   padding: 20px;
+  margin-top: 20px;
+  float:right;
+}
+
+.train-name {
+  font-weight:bold;
+  font-size: 1.2em;
+  color: Navy;
 }
 
 .car {
@@ -43,6 +51,15 @@
   min-height:40px;
   border-radius: 6px;
   margin:2px;
+  text-align: center;
+}
+
+.seat:hover {
+  border: solid 1px red;
+  max-width: 38px;
+  min-width: 38px;
+  max-height:38px;
+  min-height:38px;
 }
 
 .seat.aisle {
@@ -50,9 +67,29 @@
 }
 
 .lav {
-  max-width:90px;
-  min-width:90px;
-  max-height:40px;
-  min-height:40px;
+  max-width:85px;
+  min-width:85px;
+  max-height:50px;
+  min-height:50px;
   border-radius: 6px;
+  border: solid 1px green;
+  background-color:aquamarine;
+}
+
+.toilet {
+  margin-left:40px;
+}
+
+.occupied {
+  background-color:dodgerblue;
+}
+
+label {
+  position:relative;
+  top:10px;
+  pointer-events: none;
+}
+
+.current-user {
+  background-color: darkgoldenrod
 }

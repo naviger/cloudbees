@@ -19,6 +19,7 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
+	TrainService_GetTrains_FullMethodName  = "/TrainService/GetTrains"
 	TrainService_GetTrain_FullMethodName   = "/TrainService/GetTrain"
 	TrainService_GetSeat_FullMethodName    = "/TrainService/GetSeat"
 	TrainService_GetReceipt_FullMethodName = "/TrainService/GetReceipt"
@@ -30,6 +31,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type TrainServiceClient interface {
+	GetTrains(ctx context.Context, in *TrainsRequest, opts ...grpc.CallOption) (*TrainsReply, error)
 	GetTrain(ctx context.Context, in *TrainRequest, opts ...grpc.CallOption) (*TrainReply, error)
 	GetSeat(ctx context.Context, in *SeatRequest, opts ...grpc.CallOption) (*SeatReply, error)
 	GetReceipt(ctx context.Context, in *ReceiptRequest, opts ...grpc.CallOption) (*ReceiptReply, error)
@@ -43,6 +45,15 @@ type trainServiceClient struct {
 
 func NewTrainServiceClient(cc grpc.ClientConnInterface) TrainServiceClient {
 	return &trainServiceClient{cc}
+}
+
+func (c *trainServiceClient) GetTrains(ctx context.Context, in *TrainsRequest, opts ...grpc.CallOption) (*TrainsReply, error) {
+	out := new(TrainsReply)
+	err := c.cc.Invoke(ctx, TrainService_GetTrains_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *trainServiceClient) GetTrain(ctx context.Context, in *TrainRequest, opts ...grpc.CallOption) (*TrainReply, error) {
@@ -94,6 +105,7 @@ func (c *trainServiceClient) CancelSeat(ctx context.Context, in *CancelSeatReque
 // All implementations must embed UnimplementedTrainServiceServer
 // for forward compatibility
 type TrainServiceServer interface {
+	GetTrains(context.Context, *TrainsRequest) (*TrainsReply, error)
 	GetTrain(context.Context, *TrainRequest) (*TrainReply, error)
 	GetSeat(context.Context, *SeatRequest) (*SeatReply, error)
 	GetReceipt(context.Context, *ReceiptRequest) (*ReceiptReply, error)
@@ -106,6 +118,9 @@ type TrainServiceServer interface {
 type UnimplementedTrainServiceServer struct {
 }
 
+func (UnimplementedTrainServiceServer) GetTrains(context.Context, *TrainsRequest) (*TrainsReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetTrains not implemented")
+}
 func (UnimplementedTrainServiceServer) GetTrain(context.Context, *TrainRequest) (*TrainReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetTrain not implemented")
 }
@@ -132,6 +147,24 @@ type UnsafeTrainServiceServer interface {
 
 func RegisterTrainServiceServer(s grpc.ServiceRegistrar, srv TrainServiceServer) {
 	s.RegisterService(&TrainService_ServiceDesc, srv)
+}
+
+func _TrainService_GetTrains_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TrainsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TrainServiceServer).GetTrains(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TrainService_GetTrains_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TrainServiceServer).GetTrains(ctx, req.(*TrainsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _TrainService_GetTrain_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -231,6 +264,10 @@ var TrainService_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "TrainService",
 	HandlerType: (*TrainServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "GetTrains",
+			Handler:    _TrainService_GetTrains_Handler,
+		},
 		{
 			MethodName: "GetTrain",
 			Handler:    _TrainService_GetTrain_Handler,

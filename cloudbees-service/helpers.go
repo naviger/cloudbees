@@ -6,7 +6,7 @@ import (
 	"google.golang.org/grpc/metadata"
 )
 
-func GetMetadataKey(md metadata.MD, key string, deflt any) any {
+func GetMetadataKey(md metadata.MD, key string, deflt string) string {
 	arr := md.Get(key)
 	if len(arr) > 0 {
 		return arr[0]

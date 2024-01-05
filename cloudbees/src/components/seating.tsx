@@ -1,80 +1,52 @@
-import React from 'react'
+import React, { MouseEventHandler } from 'react'
 import './seating.css'
 import { Car } from '../models/car'
 import { Train } from '../models/train'
+import { Seat } from '../models/seat'
+import { Toilet } from './toilet'
+import { useAuth } from "react-oidc-context"
 
-const Seating = () => {
-
-  const cars:Array<Car> = []
-  let a:Car = {
-    name:"A",
-    seats:[]
+export type TrainProps = {
+  train: Train
+  setCurrentSeat: Function
+}
+const Seating = (props: TrainProps) => {
+  const auth = useAuth();
+  const selectSeat = (sid:string) => {
+    console.log(sid)
+   
+    const seats:Array<Seat> = props.train.cars[0].seats.concat(props.train.cars[1].seats)
+    let st:Seat|undefined = seats.find((s)=> {return s.id === sid})
+    props.setCurrentSeat(st)
   }
 
-  let b:Car = {
-    name:"b",
-    seats:[]
-  }
-
-  let r:number = 1;
-  let p:string = "A"
-  for(let i:number =0; i<10; i++) {
-    a.seats.push({
-      id: "A" + r + p,
-      state: 'empty',
-      passengerId: '',
-      row: r,
-      position: p
-    })
-
-    b.seats.push({
-      id: "B" + r + p,
-      state: 'empty',
-      passengerId: '',
-      row: r,
-      position: p
-    })
-
-    switch(p) {
-      case 'A':
-        p='B'
-        break
-      case 'B':
-        p = 'C'
-        break
-      case 'C':
-        p = 'D'
-        break
-      case 'D':
-        p = 'A'
-        r = r + 1
-        break
-    }
-  }
-
-
-  let train:Train = {
-    name:"London to Paris Cloud Bees Express",
-    cars: [a, b]
-  }
   return (
     <div className='content-frame'>
+        <div className="train-name">{props.train.name}</div>
         <div className="train">
-          { train.cars.map((c) => {
+          { props.train.cars.map((c) => {
             return (<div key={"c"+ c.name} className="car">
               { c.seats.map((s, i)=> {
                 return (
-                  <div key={s.id} className={"seat" + (s.position === 'B' ? " aisle" : "")} >
+                  <div 
+                    key={s.id} 
+                    id={s.id} 
+                    className={"seat" + (s.status==="occupied"? " occupied": " vacant") + (s.position === 'B' ? " aisle" : "" ) + (s.passengerId === auth.user?.profile.preferred_username ? " current-user" : "")} 
+                    onClick={() => { selectSeat(s.id)}}>
                     <label>{s.id}</label>
                   </div>
                 )
               })}
-                <div className='lav'></div>
+                <div className='lav'>
+                  <Toilet />
+                </div>
               </div>)
           })}
          </div>
     </div>
   )
 }
+
+
 
 export default Seating

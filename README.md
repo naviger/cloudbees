@@ -15,15 +15,58 @@ __Note:__ All APIs referenced are gRPC APIs, not REST ones.
 I want to board a train from London to France. The train ticket will cost $20, regardless of section or seat.
 1. Authenticated APIs should be able to parse a JWT, formatted as if from an OAuth2 server, from the metadata to authenticate a request. No signature validation is required.
 2. Create a public API where you can submit a purchase for a ticket. Details included in the receipt are:
-a. From, To, User , Price Paid.
-i. User should include first name, last name, email address
-b. The user is allocated a seat in the train as a result of the purchase. Assume the train has only 2 sections, section A and section B and each section has 10 seats.
+	<ol type="a"><li>From, To, User , Price Paid.
+		<ol type="i"><li>User should include first name, last name, email address</li></ol>
+	</li>
+	<li>The user is allocated a seat in the train as a result of the purchase. Assume the train has only 2 sections, section A and section B and each section has 10 seats.</li>
+	</ol>
 3. An authenticated API that shows the details of the receipt for the user
 4. An authenticated API that lets an admin view all the users and seats they are allocated by the requested section
 5. An authenticated API to allow an admin or the user to remove the user from the train
 6. An authenticated API to allow an admin or the user to modify the user’s seat
 
+# Solution Overview
+The solution is composed of A GoLang-based service that provides the GRPC/Proto service. This is fronted by a golang API that exposes the GRPC/Proto service as a rest service via Go/Gin. On the front end is a ReactJS application that consumes the Rest API. It uses OIDC for authorization, with client roles of __travel_admin__ and __travel_customer__. The backing database is an in-memory database hosted in the same process as the Go GRPC server. It contains three tables: 
 
+1. Train - a repository for the list of trains. Trains are established as one for each day for the next thirty days from the start of the server. Train names are the date in yyyMMdd format.
+2. Seat - The seats that arew available for the given trains. With 20 seats per train, this is a table of 600 records. 
+3. Receipt - The receipts for any transactions that are performed. This is an empty table to start.
+
+The UI uses Axios and react-oidc-context, where the react-oidc-context interacts with KeyCloak to receive the JWT. The JWT, when available, is attached to the controller  through wich all calls are routed, ensuring the token is transmitted on all authorized calls.
+
+A seperate __deploy__ project handles the creation of the infrastructure needed.
+
+# Assumptions
+1. Authentication is provided by OAuth with OIDC for authorization
+1. Unauthenticated user receives details similar to receipt on successfull reservation. Admin or authenticated Customer can pull receipt.
+1. Receipt is a receipt, it is the purchase confirmation and not a boarding pass. It is unchanging, and seat may change via future actions (change/Cancel).
+2. France is assumed to be Paris, to normalize initial locationa nd destination as cities.
+3. UserId/PassengerId is defined as "firstName.lastname"
+4. Seats on trains can be reserved up to 30 days in advance. 
+5. 
+
+# Design Decisions
+1. Utilize Hashicorps go-memdb for in memory database. 
+2. Utilize KeyCloak with PostgreSQL for the authentication infrastructure.
+3. Authentication and Authorization is provided by KeyCloak, with a JWT token provided with client (not realm) roles.  
+4. JWT details are extracted at both the API and the Service layers. Token is passed from API to GRPC Service in context metadata. coreos-oidc library is used for oidc.
+5. All layers will use SSL/TLS to encrypt data in transmission.
+6. Utilize Fluent UI 9 for React JS UI Components where necessary
+7. 
+
+# ToDos
+1. Login from tests to KeyCloak to get JWT - currently JWT is hardcoaded. Due to the timely nature of the JWT, the JWT must be inserted into the test files.
+2. API-level testing
+3. UI-level testing
+4. Currently Proto output is copied from server to API to provide client. look for a solution to share.
+5. All certs are currently shared and saved to each component service. Need to create scripting to manage properly with individial certs.
+6. Deploy the Server to a container
+7. Deploy the API to a container
+8. Deploy the React UI to a container
+9. ~~Logout on the UI should redirect to the home page~~
+10. Ensure user can not double book
+11. Modify Change Seat in service to allow retreival of receipt on seat change.
+12. Modify receipt client-side to allow Admin to get receipt  
 
 # Certificate Setup
 ## Create CA
@@ -97,12 +140,25 @@ DNS.3 = cloudbees.dev
 	- create protocol mapper, type: Audience, name: cloudbees-common-audience, Include client audience: cloudbees-client, Add to access token: true
 8. Add the newly created client scope " cloudbees-common-audience" to "cloudbees-service" client's client roles
 
-# Create React App (with Typescript)
-
-Execute the following:
-
+# Common Terminal Calls
+1. Start Container environments
 ```
-npx create-react-app cloudbees --template typescript
+docker compose up
+```
+1. Proto output:
+```
+protoc train.proto --go_out=. --go-grpc_out=.
+```
+2. Start Go Service - from cloudbees-service directory
+```
+go run main.go server.go helpers.go schema.go seedNames.go keycloak.go
+```
+3. Run Go Service Tests - from cloudbees-service directory
+```
+go test -v
 ```
 
-
+4. Run UI
+```
+yarn start
+```

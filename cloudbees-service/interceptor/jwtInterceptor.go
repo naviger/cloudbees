@@ -52,17 +52,15 @@ func JwtInterceptor(
 	username := ""
 
 	md, ok := metadata.FromIncomingContext(ctx)
-
 	newMD := md.Copy()
-	if !ok {
 
-	} else {
-
+	if ok {
 		rawAccessToken := md.Get("authorization")
+
 		if len(rawAccessToken) > 0 && len(rawAccessToken[0]) > 5 {
 
 			strippedAccessToken = strings.ReplaceAll(rawAccessToken[0], "bearer ", "")
-
+			strippedAccessToken = strings.ReplaceAll(strippedAccessToken, "Bearer ", "")
 			tr := &http.Transport{
 				TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 			}
@@ -84,7 +82,6 @@ func JwtInterceptor(
 				verifier := provider.Verifier(oidcConfig)
 				idToken, err := verifier.Verify(octx, strippedAccessToken)
 
-				//var IDTokenClaims Claims
 				if err != nil {
 					authorisationFailed("authorisation failed while verifying the token: "+err.Error(), &newMD)
 					log.Fatalf("AUTH Failed while verifying token: %v", err)
@@ -106,6 +103,8 @@ func JwtInterceptor(
 				isAuth = AtLeastOneRole(user_access_roles, authRoles)
 				isAdmin = AtLeastOneRole(user_access_roles, adminRoles)
 				isCustomer = AtLeastOneRole(user_access_roles, customerRoles)
+
+				log.Println("AUTH RESULTS: ", isAuth, isAdmin, isCustomer, username)
 			}
 
 		}

@@ -64,5 +64,15 @@ var schema = &memdb.DBSchema{
 				},
 			},
 		},
+		"Receipt": &memdb.TableSchema{
+			Name: "Receipt",
+			Indexes: map[string]*memdb.IndexSchema{
+				"id": &memdb.IndexSchema{
+					Name:    "id",
+					Unique:  true,
+					Indexer: &memdb.StringFieldIndex{Field: "Id"},
+				},
+			},
+		},
 	},
 }

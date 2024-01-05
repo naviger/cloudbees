@@ -1,0 +1,40 @@
+.content {
+  display: flex;
+  flex-direction: row;
+  padding: 20px;
+}
+
+.form {
+  display: flex;
+  flex-direction:column;
+  flex:1;
+  margin-right: 40px;
+}
+
+.formline {
+  display:flex;
+}
+
+.fui_Dropdown {
+  height:20px;
+  max-width: 200px;
+  border: solid 1px silver !important;
+}
+
+.label { 
+  min-width: 100px !important;
+  text-align:right;
+  margin-right:10px;
+  margin-top:5px;
+  color:navy;
+  font-weight:bold;
+}
+
+.stats {
+  margin-left:110px;
+  margin-top:20px;
+  border-bottom: solid 1px navy;
+  padding-bottom: 10px;
+}
+
+

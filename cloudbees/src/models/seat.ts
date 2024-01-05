@@ -1,6 +1,6 @@
 export interface Seat {
   id:string
-  state: string
+  status: string
   passengerId:string
   row:number,
   position:string

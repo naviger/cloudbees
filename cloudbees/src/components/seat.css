@@ -1,0 +1,128 @@
+.seat-details {
+  margin-top:20px;
+  margin-left:110px;
+  border-radius: 10px;
+  border: solid 1px navy;
+  height: 300px;
+}
+
+.seat-name {
+  position:relative;
+  left:20px;
+  top:-10px;
+  background-color:white;
+  width:40px;
+  text-align:center;
+}
+
+.select-seat-msg {
+  margin-top:20px;
+  margin-right:20px;
+  float:right;
+}
+
+.seat-details-inner {
+  display: flex;
+  flex-direction: row;
+}
+
+.seat-operations {
+  min-width: 200px;
+  max-width: 200px;
+  border-right: solid 1px navy;
+  margin-left:20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.seat-operations button {
+  max-width: 180px;
+  min-width: 180px;
+  margin-bottom:6px;
+}
+
+.change-seat {
+  margin-top:80px;
+}
+
+.change-seat button {
+  max-width: 180px;
+  min-width: 180px;
+}
+
+label {
+  margin-bottom:20px;
+  color: navy;
+  font-weight:bold;
+  font-size:0.8em;
+}
+
+.change-details {
+  color: navy;
+  margin-top:20px;
+  margin-bottom:10px;
+  font-size:0.8em;
+}
+
+.button-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.seat-data {
+  padding-left:10px;
+}
+
+.seat-data label {
+  font-size: 0.8em;
+  position: relative;
+  top: -2px;
+  margin-right: 10px;
+  color: navy;
+}
+
+.reserve-seat {
+  margin-top:20px;
+  display:flex;
+  flex-direction:column;
+}
+
+.reserve-seat button {
+  margin-top:20px;
+}
+.seat-data input {
+  min-width:240px;
+}
+
+.seat-data button {
+  width:248px;
+}
+
+.seat-dd {
+  margin-top:20px;
+  max-width:120px;
+}
+
+.formline-uo {
+  display:flex;
+  flex-direction:column;
+  margin-top:2px;
+}
+
+.formline-uo label {
+  font-size:0.7em;
+  font-weight:normal;
+  margin-bottom: 10px;
+  position:relative;
+  top: 4px;
+  min-width:100px;
+  max-width:100px;
+  width:100px;
+  flex:1;
+  clear:both;
+}
+
+.formline-uo input {
+  clear: left;
+  margin-right:20px;
+}

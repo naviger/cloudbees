@@ -2,18 +2,26 @@ syntax = "proto3";
 option go_package = "/train";
 
 service TrainService {
-    rpc GetTrain(TrainRequest) returns (TrainReply) {}
-    rpc GetSeat(SeatRequest) returns (SeatReply) {}
-    rpc GetReceipt(ReceiptRequest) returns (ReceiptReply) {}
-    rpc ChangeSeat(ChangeSeatRequest) returns (ChangeSeatReply) {}
-    rpc CancelSeat(CancelSeatRequest) returns (CancelSeatReply) {}
+  rpc GetTrains(TrainsRequest) returns (TrainsReply) {}
+  rpc GetTrain(TrainRequest) returns (TrainReply) {}
+  rpc GetSeat(SeatRequest) returns (SeatReply) {}
+  rpc GetReceipt(ReceiptRequest) returns (ReceiptReply) {}
+  rpc ChangeSeat(ChangeSeatRequest) returns (ChangeSeatReply) {}
+  rpc CancelSeat(CancelSeatRequest) returns (CancelSeatReply) {}
+}
+
+message TrainsRequest {
+}
+
+message TrainsReply {
+  repeated string trains = 1;
 }
 
 message TrainRequest {
-  string trainId = 1;
-  int32 day = 2;
-  int32 month = 3;
-  int32 year = 4;
+  string trainId = 2;
+  int32 day = 3;
+  int32 month = 4;
+  int32 year = 5;
 }
 
 message TrainReply {
@@ -30,7 +38,7 @@ message TrainReply {
   int32 day = 6;
   int32 month = 7;
   int32 year = 8;
-  repeated Seat Seats = 9;
+  repeated TrainReply.Seat Seats = 9;
 }
 
 message SeatRequest {
@@ -43,40 +51,34 @@ message SeatRequest {
 }
 
 message SeatReply {
-  message Seat {
-    string id = 110;
-    string car = 111;
-    int32 row = 112;
-    string position = 113;
-    string status = 114;
-    string passengerId = 115;
+  message User {
+    string userId = 2301;
+    string firstName = 2302;
+    string lastName = 2303;
+    string emailAddress = 2304;
   }
 
   string id = 2001;
   string status = 2002;
   string customerId = 2003;
-  Seat seat = 2004;
+  TrainReply.Seat seat = 2004;
+  User user = 2005;
 }
 
 message ReceiptRequest {
   string id = 2201;
   string customerId = 2202;
-  string trainId = 2203;
+  string seatId = 2203;
 }
 
 message ReceiptReply {
-  message Seat {
-    string id = 210;
-    string car = 211;
-    int32 row = 212;
-    string position = 213;
-    string status = 214;
-    string passengerId = 215;
-  }
-
-  string id = 2301;
-  string trainId = 2302;
-  repeated Seat seats = 2303;
+  string id = 2305;
+  string trainId = 2306;
+  TrainReply.Seat seat = 2307;
+  string from = 2308;
+  string to = 2309;
+  float price = 2310;
+  SeatReply.User user = 2311;
 }
 
 message CancelSeatRequest {

@@ -65,18 +65,9 @@ function App() {
     }
   }
 
-  
-  if (auth.isAuthenticated && isAdmin) {
-    return (
-        <div className="main">
-           <Nav></Nav>
-          <AdminPage></AdminPage>
-        </div>
-    )
-  }
-
   return (
     <div className="main">
+    
       <Nav></Nav>
       <DefaultPage></DefaultPage>
     </div>
